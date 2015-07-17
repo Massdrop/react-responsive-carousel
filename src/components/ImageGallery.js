@@ -5,18 +5,25 @@ var Carousel = require('./Carousel');
 module.exports = React.createClass({
 	
 	propsTypes: {
-		images: React.PropTypes.array.isRequired
+		images: React.PropTypes.array.isRequired,
+		initialSelectedImage: React.PropTypes.integer
 	},
+
+	getDefaultProps () {
+		return {
+			initialSelectedImage: 0
+		}
+	}, 
 
 	getInitialState () {
 		return {
-			currentImage: 0
+			currentImage: this.props.initialSelectedImage
 		}
 	},
 
-	selectItem (selectedItem) {
+	selectImage (selectedImage) {
 		this.setState({
-			currentImage: selectedItem
+			currentImage: selectedImage
 		});
 	},
 
@@ -27,8 +34,8 @@ module.exports = React.createClass({
 
 		return (
 			<div className="image-gallery">
-				<Carousel type="slider" items={ images } selectedItem={this.state.currentImage} onChange={this.selectItem} onSelectItem={ this.selectItem } />
-				<Carousel items={ images } selectedItem={this.state.currentImage} onSelectItem={ this.selectItem } />
+				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} onChange={this.selectImage} onSelectImage={this.selectImage} />
+				<Carousel images={images} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
 			</div>
 		);
 	}

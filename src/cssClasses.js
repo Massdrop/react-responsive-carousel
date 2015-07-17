@@ -23,11 +23,11 @@ module.exports = {
 		});
 	},
 
-	ITEM (isSlider, index, selectedItem) {
+	ITEM (isSlider, index, selectedImage) {
 		return classNames({
 			"thumb": !isSlider,
 			"slide": isSlider,
-			"selected": index === selectedItem
+			"selected": index === selectedImage
 		});
 	},
 

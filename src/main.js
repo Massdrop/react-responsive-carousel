@@ -3,6 +3,8 @@ var React = require('react');
 var ImageGallery = require('./components/ImageGallery');
 var Carousel = require('./components/Carousel');
 
+window.React = React;
+
 var galleryImages = [
 	<img src="http://lorempixel.com/700/250/sports/1" key="1" />,
 	<img src="http://lorempixel.com/700/250/sports/2" key="2" />,
@@ -11,6 +13,25 @@ var galleryImages = [
 	<img src="http://lorempixel.com/700/250/sports/5" key="5" />,
 	<img src="http://lorempixel.com/700/250/sports/6" key="6" />,
 	<img src="http://lorempixel.com/700/250/sports/7" key="7" />
+	// ,
+	// <img src="http://lorempixel.com/700/250/sports/2" key="8" />,
+	// <img src="http://lorempixel.com/700/250/sports/3" key="9" />,
+	// <img src="http://lorempixel.com/700/250/sports/4" key="10" />,
+	// <img src="http://lorempixel.com/700/250/sports/5" key="11" />,
+	// <img src="http://lorempixel.com/700/250/sports/6" key="11" />,
+	// <img src="http://lorempixel.com/700/250/sports/7" key="12" />,
+	// <img src="http://lorempixel.com/700/250/sports/2" key="13" />,
+	// <img src="http://lorempixel.com/700/250/sports/3" key="14" />,
+	// <img src="http://lorempixel.com/700/250/sports/4" key="15" />,
+	// <img src="http://lorempixel.com/700/250/sports/5" key="16" />,
+	// <img src="http://lorempixel.com/700/250/sports/6" key="17" />,
+	// <img src="http://lorempixel.com/700/250/sports/7" key="18" />,
+	// <img src="http://lorempixel.com/700/250/sports/2" key="19" />,
+	// <img src="http://lorempixel.com/700/250/sports/3" key="20" />,
+	// <img src="http://lorempixel.com/700/250/sports/4" key="21" />,
+	// <img src="http://lorempixel.com/700/250/sports/5" key="22" />,
+	// <img src="http://lorempixel.com/700/250/sports/6" key="23" />,
+	// <img src="http://lorempixel.com/700/250/sports/7" key="24" />
 ];
 
 var sliderImages = [
@@ -50,7 +71,7 @@ var DemoGallery = React.createClass({
 	render() {
 		return (
 			<div className="demo-image-gallery">
-				<ImageGallery images={ galleryImages } />
+				<ImageGallery images={ galleryImages } initialSelectedImage={5} />
 			</div>
 		);
 	}
@@ -60,7 +81,7 @@ var DemoSliderControls = React.createClass({
 	render() {
 		return (
 			<div className="demo-slider">
-				<Carousel type="slider" items={ sliderImages } showControls={true} showStatus={true} />
+				<Carousel type="slider" images={ sliderImages } showControls={true} showStatus={true} />
 			</div>
 		);
 	}
@@ -70,7 +91,7 @@ var DemoCarousel = React.createClass({
 	render() {
 		return (
 			<div className="demo-carousel">
-				<Carousel items={ carouselImages } />
+				<Carousel images={ carouselImages } />
 			</div>
 		);
 	}
