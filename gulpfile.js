@@ -41,7 +41,8 @@ gulp.task('deploy', ['test'], function () {
   });
 });
 
-gulp.task('package', ['test'], function () {
+//gulp.task('package', ['test'], function () {
+gulp.task('package', function () {
   // pack js files to npm 
   jsxTask({
   environment: 'package'
@@ -53,8 +54,10 @@ gulp.task('package', ['test'], function () {
 });
 
 // Development workflow
-gulp.task('default', ['scripts', 'test', 'styles', 'webserver'], function () {
-  gulp.watch(configs.paths.source + "/**/*.js", ['scripts', 'test'])
+// gulp.task('default', ['scripts', 'test', 'styles', 'webserver'], function () {
+gulp.task('default', ['scripts', 'styles', 'webserver'], function () {
+  // gulp.watch(configs.paths.source + "/**/*.js", ['scripts', 'test'])
+  gulp.watch(configs.paths.source + "/**/*.js", ['scripts'])
   .on('change', function(event) {
     console.log('Scripts watcher trigger: ' + event.path + ' was ' + event.type + ', running tasks...');
   });

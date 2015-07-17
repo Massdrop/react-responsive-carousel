@@ -251,13 +251,12 @@ module.exports = React.createClass({
 
 		return this.props.items.map((item, index) => {
 			var itemClass = klass.ITEM(this.isSlider, index, this.state.selectedItem);
-			var imageSchema = {};
 			
 			return (
 				<li key={index} ref={"item" + index} className={itemClass}
 					style={{width: this.isSlider && this.itemSize}} 
 					onClick={ this.handleClickItem.bind(this, index, item) }>
-					<img src={item.url} />
+					{item}
 				</li>
 			);
 		});
