@@ -3,8 +3,8 @@ var configs = require('./configs');
 
 module.exports = function() {
   connect.server({
-    root: configs.paths.development,
-    livereload: true,
-    port: 8000,
+  root: configs.paths.development,
+  livereload: true,
+  port: 8000,
   });
 }

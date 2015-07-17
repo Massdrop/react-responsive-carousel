@@ -30,9 +30,9 @@ describe("Carousel", function() {
 
 	afterEach(function() {
 		if (componentInstance && componentInstance.isMounted()) {
-	      // Only components with a parent will be unmounted
-	      React.unmountComponentAtNode(componentInstance.getDOMNode());
-	    }
+	    // Only components with a parent will be unmounted
+	    React.unmountComponentAtNode(componentInstance.getDOMNode());
+	  }
   	});
 
 	it("Should have the right state at the begin", function () {

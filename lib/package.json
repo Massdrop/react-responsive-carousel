@@ -3,35 +3,35 @@
   "version": "0.1.3",
   "description": "React Responsive Carousel",
   "author": {
-    "name": "Leandro Augusto Lemos",
-    "url": "http://leandrowd.github.io/"
+  "name": "Leandro Augusto Lemos",
+  "url": "http://leandrowd.github.io/"
   },
   "keywords": [
-    "react",
-    "carousel",
-    "gallery",
-    "image-gallery",
-    "slider",
-    "responsive",
-    "swipe",
-    "mobile-friendly",
-    "react-component",
-    "view"
+  "react",
+  "carousel",
+  "gallery",
+  "image-gallery",
+  "slider",
+  "responsive",
+  "swipe",
+  "mobile-friendly",
+  "react-component",
+  "view"
   ],
   "main": "index.js",
   "license": "MIT",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/leandrowd/react-responsive-carousel.git"
+  "type": "git",
+  "url": "https://github.com/leandrowd/react-responsive-carousel.git"
   },
   "bugs": {
-    "url": "https://github.com/leandrowd/react-responsive-carousel/issues"
+  "url": "https://github.com/leandrowd/react-responsive-carousel/issues"
   },
   "homepage": "http://leandrowd.github.io/react-responsive-carousel/",
   "dependencies": {
-    "classnames": "^2.1.1"
+  "classnames": "^2.1.1"
   },
   "devDependencies": {
-    "react": "^0.13.3"
+  "react": "^0.13.3"
   }
 }

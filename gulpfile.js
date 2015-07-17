@@ -20,47 +20,47 @@ gulp.task('test', function () {
 
 gulp.task('scripts', function() {
   browserifyTask({
-    environment: 'development'
+  environment: 'development'
   });
 })
 
 gulp.task('styles', function(){
   cssTask({
-    environment: 'development'
+  environment: 'development'
   });
 })
 
 gulp.task('deploy', ['test'], function () {
   browserifyTask({
-    environment: 'production'
+  environment: 'production'
   })
   .vendor();
   
   cssTask({
-    environment: 'production'
+  environment: 'production'
   });
 });
 
 gulp.task('package', ['test'], function () {
   // pack js files to npm 
   jsxTask({
-    environment: 'package'
+  environment: 'package'
   });
   
   cssTask({
-    environment: 'package'
+  environment: 'package'
   });
 });
 
 // Development workflow
 gulp.task('default', ['scripts', 'test', 'styles', 'webserver'], function () {
   gulp.watch(configs.paths.source + "/**/*.js", ['scripts', 'test'])
-    .on('change', function(event) {
-      console.log('Scripts watcher trigger: ' + event.path + ' was ' + event.type + ', running tasks...');
-    });
+  .on('change', function(event) {
+    console.log('Scripts watcher trigger: ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
 
   gulp.watch(configs.paths.source + "/**/*.scss", ['styles'])
-    .on('change', function(event) {
-      console.log('Styles watcher trigger: ' + event.path + ' was ' + event.type + ', running tasks...');
-    });
+  .on('change', function(event) {
+    console.log('Styles watcher trigger: ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
 });

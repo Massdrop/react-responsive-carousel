@@ -30,8 +30,8 @@
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: 'm4d-icons';
-    src: url('font/m4d-icons.svg?3179539#m4d-icons') format('svg');
+  font-family: 'm4d-icons';
+  src: url('font/m4d-icons.svg?3179539#m4d-icons') format('svg');
   }
 }
 */
@@ -130,23 +130,23 @@
   width: 100%;
   position: relative; }
   .image-gallery * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; }
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
   .image-gallery img {
-    width: 100%;
-    display: inline-block; }
+  width: 100%;
+  display: inline-block; }
   .image-gallery .zoom {
-    width: 85%;
-    margin: 0 auto; }
-    @media (min-width: 768px) {
-      .image-gallery .zoom {
-        width: 100%;
-        margin: 0; } }
-    .image-gallery .zoom img {
-      width: 100%; }
+  width: 85%;
+  margin: 0 auto; }
+  @media (min-width: 768px) {
+    .image-gallery .zoom {
+    width: 100%;
+    margin: 0; } }
+  .image-gallery .zoom img {
+    width: 100%; }
   .image-gallery .carousel ~ .carousel {
-    margin-top: 25px;
-    display: inline-block; }
+  margin-top: 25px;
+  display: inline-block; }
   .image-gallery .carousel .thumb {
-    width: 120px; }
+  width: 120px; }

@@ -8,16 +8,16 @@ var packageFolder = 'lib';
 
 var configs = {
   folders: {
-    "source": sourceFolder,
-    "development": devFolder,
-    "production": productionFolder,
-    "package": packageFolder,
+  "source": sourceFolder,
+  "development": devFolder,
+  "production": productionFolder,
+  "package": packageFolder,
   },
   paths: {
-    "source": './' + sourceFolder,
-    "development": './' + devFolder,
-    "production": './' + productionFolder,  
-    "package": './' + packageFolder
+  "source": './' + sourceFolder,
+  "development": './' + devFolder,
+  "production": './' + productionFolder,  
+  "package": './' + packageFolder
   }
 }
 
