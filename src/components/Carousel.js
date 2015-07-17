@@ -25,7 +25,8 @@ module.exports = React.createClass({
 			// Index of the thumb that will appear first.
 			// If you are using type = slider, this has 
 			// the same value of the selected item.
-			firstItem: 0
+			firstItem: 0,
+			animate: false // we don't want the first image loaded to slide in
 		}
 	},
 	statics: {
@@ -215,7 +216,8 @@ module.exports = React.createClass({
 		this.setState({
 			firstItem: position,
 			// if it's not a slider, we don't need to set position here
-			selectedImage: this._isSlider() ? position : this.state.selectedImage
+			selectedImage: this._isSlider() ? position : this.state.selectedImage,
+			animate: true
 		});
 		
 		this.triggerOnChange(position);
@@ -307,9 +309,9 @@ module.exports = React.createClass({
 				width: this.lastElementPosition
 			}
 		}
-		
+
 		return (
-			<div className={klass.CAROUSEL(this._isSlider())}>
+			<div className={klass.CAROUSEL(this._isSlider(), this.state.animate)}>
 				<button className={klass.ARROW_LEFT(!showPrevArrow)} onClick={this.slideRight} />
 				
 				<div className={klass.WRAPPER(this._isSlider())} ref="itemsWrapper">

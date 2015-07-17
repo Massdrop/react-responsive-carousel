@@ -1,10 +1,11 @@
 var classNames = require('classnames');
 
 module.exports = {
-	CAROUSEL (isSlider) {
+	CAROUSEL (isSlider, animate) {
 		return classNames({
 			"carousel": true,
-			"carousel-slider": isSlider
+			"carousel-slider": isSlider,
+			"carousel-animate": animate
 		});
 	}, 
 
