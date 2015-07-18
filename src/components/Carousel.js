@@ -1,3 +1,5 @@
+'use strict';
+
 /** @jsx React.DOM */
 var React = require('react/addons'),
 	klass = require('../cssClasses'),
@@ -47,7 +49,7 @@ module.exports = React.createClass({
 		window.removeEventListener("resize", this.updateDimensions);
 		window.removeEventListener("DOMContentLoaded", this.updateDimensions);
   },
-	componentWillReceiveProps (props, state) {
+	componentWillReceiveProps (props) {
 		if (props.initialSelectedImage !== this.state.selectedImage) {
 			var firstItem = props.initialSelectedImage;
 			
@@ -61,7 +63,8 @@ module.exports = React.createClass({
 
 			this.setState({
 				selectedImage: props.initialSelectedImage,
-				firstItem: firstItem
+				firstItem: firstItem,
+				animate: true
 			});
 		}
 	},
@@ -216,8 +219,7 @@ module.exports = React.createClass({
 		this.setState({
 			firstItem: position,
 			// if it's not a slider, we don't need to set position here
-			selectedImage: this._isSlider() ? position : this.state.selectedImage,
-			animate: true
+			selectedImage: this._isSlider() ? position : this.state.selectedImage
 		});
 		
 		this.triggerOnChange(position);

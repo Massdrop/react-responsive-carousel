@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
 	outerWidth: (el) => {
 		var width = el.offsetWidth;

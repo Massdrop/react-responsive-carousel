@@ -1,3 +1,5 @@
+'use strict';
+
 /** @jsx React.DOM */
 var React = require('react/addons');
 var Carousel = require('./Carousel');
@@ -6,6 +8,7 @@ module.exports = React.createClass({
 	
 	propsTypes: {
 		images: React.PropTypes.array.isRequired,
+		thumnails: React.PropTypes.array,
 		initialSelectedImage: React.PropTypes.integer
 	},
 
@@ -28,14 +31,18 @@ module.exports = React.createClass({
 	},
 
 	render () {
-		var { images } = this.props;
-		var { current } = this.state;
-		var mainImage = (images && images[current] && images[current].url);
+		var { images, thumbnails } = this.props,
+			{ current } = this.state,
+			mainImage = (images && images[current] && images[current].url);
+
+		if (typeof thumbnails === 'undefined') {
+			thumbnails = images;
+		}
 
 		return (
 			<div className="image-gallery">
 				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} onChange={this.selectImage} onSelectImage={this.selectImage} />
-				<Carousel images={images} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
+				<Carousel images={thumbnails} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
 			</div>
 		);
 	}
