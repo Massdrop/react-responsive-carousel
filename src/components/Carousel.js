@@ -9,7 +9,11 @@ var React = require('react/addons'),
 module.exports = React.createClass({
 	propsTypes: {
 		images: React.PropTypes.array.isRequired,
-		initialSelectedImage: React.PropTypes.integer
+		initialSelectedImage: React.PropTypes.integer,
+		showControls: React.PropTypes.bool,
+		showStatus: React.PropTypes.bool,
+		onChange: React.PropTypes.func,
+		onSelectImage: React.PropTypes.func
 	},
 	getDefaultProps () {
 		return {

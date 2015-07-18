@@ -9,12 +9,16 @@ module.exports = React.createClass({
 	propsTypes: {
 		images: React.PropTypes.array.isRequired,
 		thumnails: React.PropTypes.array,
-		initialSelectedImage: React.PropTypes.integer
+		initialSelectedImage: React.PropTypes.integer,
+		showControls: React.PropTypes.bool,
+		showStatus: React.PropTypes.bool
 	},
 
 	getDefaultProps () {
 		return {
-			initialSelectedImage: 0
+			initialSelectedImage: 0,
+			showControls: true,
+			showStatus: true
 		}
 	}, 
 
@@ -41,7 +45,7 @@ module.exports = React.createClass({
 
 		return (
 			<div className="image-gallery">
-				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} onChange={this.selectImage} onSelectImage={this.selectImage} />
+				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showControls={this.props.showControls} showStatus={this.props.showStatus} onChange={this.selectImage} onSelectImage={this.selectImage} />
 				<Carousel images={thumbnails} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
 			</div>
 		);
