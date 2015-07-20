@@ -12,7 +12,6 @@ module.exports = React.createClass({
 		initialSelectedImage: React.PropTypes.integer,
 		showControls: React.PropTypes.bool,
 		showStatus: React.PropTypes.bool,
-		onChange: React.PropTypes.func,
 		onSelectImage: React.PropTypes.func
 	},
 	getDefaultProps () {
@@ -112,27 +111,19 @@ module.exports = React.createClass({
 		});
 	}, 
 
-	handleClickItem (index, item) {
+	triggerOnSelectImage (imageIndex) {
 		var handler = this.props.onSelectImage;
 
 		if (typeof handler === 'function') {
-			handler(index, item);
-		}	
+			handler(imageIndex);
+		}
 
-		if (index !== this.state.selectedImage) {
+		if (imageIndex !== this.state.selectedImage) {
 			this.setState({
-				selectedImage: index
+				selectedImage: imageIndex
 			});
 		}
-	}, 
-
-	triggerOnChange (item) {
-		var handler = this.props.onChange;
-
-		if (typeof handler === 'function') {
-			handler(item);
-		}	
-	}, 
+	},
 
 	// touch start
 	onSwipeStart (e) {
@@ -226,7 +217,7 @@ module.exports = React.createClass({
 			selectedImage: this._isSlider() ? position : this.state.selectedImage
 		});
 		
-		this.triggerOnChange(position);
+		this.triggerOnSelectImage(position);
 	},
 
 
@@ -253,7 +244,7 @@ module.exports = React.createClass({
 			return (
 				<li key={index} ref={"item" + index} className={itemClass}
 					style={{width: this._isSlider() && this.itemSize}} 
-					onClick={ this.handleClickItem.bind(this, index, item) }>
+					onClick={this.triggerOnSelectImage.bind(this, index)}>
 					{item}
 				</li>
 			);

@@ -1,5 +1,5 @@
 %arrows {
-	@include transition(all, .25s, ease-in);
+	@include transition(all, .25s, ease-out);
 	@include opacity(.4);
 	position: absolute;
 	z-index: 2;
@@ -52,28 +52,28 @@
 
 	&.carousel-animate {
 	  .thumbs {
-			@include transition(all, .15s, ease-in);
+			@include transition(all, .15s, ease-out);
 			// activate hardware accelerated animations using translate property
 			@include enhanceAnimations();
 	  }
 
 	  .thumb {
-			@include transition(border, .15s, ease-in);
+			@include transition(border, .15s, ease-out);
 	  }
 
 		.slider {
-			@include transition(all, .35s, ease-in);
+			@include transition(all, .35s, ease-out);
 			// activate hardware accelerated animations using translate property
 			@include enhanceAnimations();
 
 			&.swiping {
-				@include transition(none, 0, ease-in);
+				@include transition(none, 0, ease-out);
 			}
 		}
 
 		.control-dots {
 			.dot {
-				@include transition(opacity, .25s, ease-in);
+				@include transition(opacity, .25s, ease-out);
 			}
 		}
 	}
