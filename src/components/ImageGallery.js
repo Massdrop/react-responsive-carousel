@@ -9,9 +9,12 @@ module.exports = React.createClass({
 		images: React.PropTypes.array.isRequired,
 		thumnails: React.PropTypes.array,
 		initialSelectedImage: React.PropTypes.integer,
+
 		showControls: React.PropTypes.bool,
 		showStatus: React.PropTypes.bool,
-		enableKeyboardShortcuts: React.PropTypes.bool
+		enableKeyboardShortcuts: React.PropTypes.bool,
+
+		onSelectImage: React.PropTypes.func
 	},
 	getDefaultProps: function() {
 		return {
@@ -38,13 +41,9 @@ module.exports = React.createClass({
   },
   onArrowKeyUp: function(e) {
     if (e.keyCode === 37) { // Left
-    	this.setState({
-				currentImage: (this.state.currentImage - 1 + this.props.images.length) % this.props.images.length
-    	});
+    	this.selectImage((this.state.currentImage - 1 + this.props.images.length) % this.props.images.length);
     } else if (e.keyCode === 39) { // Right
-    	this.setState({
-				currentImage: (this.state.currentImage + 1 + this.props.images.length) % this.props.images.length
-    	});
+    	this.selectImage((this.state.currentImage + 1) % this.props.images.length);
     }
   },
 	selectImage: function(imageIndex) {
@@ -52,6 +51,10 @@ module.exports = React.createClass({
 			this.setState({
 				currentImage: imageIndex
 			});
+
+			if (typeof this.props.onSelectImage === 'function') {
+				this.props.onSelectImage(imageIndex);
+			}
 		}
 	},
 	render: function() {
