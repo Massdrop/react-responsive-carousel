@@ -46,7 +46,6 @@
 	width: 100%;
 
 	img {
-		width: 100%;
 		display: inline-block;
 	}
 
@@ -105,16 +104,13 @@
 		margin-right: 6px;
 		white-space: nowrap;
 		overflow: hidden;
-		border: 3px solid #fff;
+		border: 1px solid #fff;
 		padding: 2px;
+		vertical-align: middle;
 
 		&.selected, &:hover {
-			border: 3px solid $color-primary;
+			border: 1px solid $color-primary;
 			padding: 2px;
-		}
-
-		img {
-			vertical-align: top;
 		}
 	}
 
@@ -154,7 +150,6 @@
 		position: relative;
 		list-style: none;
 		overflow: hidden;
-
 		white-space: nowrap;
 	}
 
@@ -162,11 +157,8 @@
 		display: inline-block;
 		width: 260px;
 		margin: 0px;
+		vertical-align: middle;
 		white-space: nowrap;
-
-		img {
-			vertical-align: top;
-		}
 	}
 
 	.control-dots {

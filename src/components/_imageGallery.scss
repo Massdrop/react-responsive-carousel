@@ -10,7 +10,6 @@
 	position: relative;
 	
 	img {
-		width: 100%;
 		display: inline-block;
 	}
 
@@ -22,15 +21,6 @@
 			width: 100%;
 			margin: 0;
 		}
-
-		img {
-			width: 100%;
-		}
-	}
-
-	.carousel ~ .carousel {
-		margin-top: 25px;
-		display: inline-block;
 	}
 
 	.carousel {

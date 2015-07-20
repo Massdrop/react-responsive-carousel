@@ -24,13 +24,7 @@ module.exports = React.createClass({
 	},
 	getInitialState () {
 		return {
-			// index of the image to be shown.
-			selectedImage: this.props.initialSelectedImage,
-
-			// Index of the thumb that will appear first.
-			// If you are using type = slider, this has 
-			// the same value of the selected item.
-			firstItem: 0,
+			selectedImage: this.props.initialSelectedImage, // index of the image to be shown.
 			animate: false // we don't want the first image loaded to slide in
 		}
 	},
@@ -44,29 +38,15 @@ module.exports = React.createClass({
 		// as the widths are calculated, we need to resize 
 		// the carousel when the window is resized
 		window.addEventListener("resize", this.updateDimensions);
-		// issue #2 - image loading smaller
-		window.addEventListener("DOMContentLoaded", this.updateDimensions);
   },
 	componentWillUnmount() {
 		// removing listeners
 		window.removeEventListener("resize", this.updateDimensions);
-		window.removeEventListener("DOMContentLoaded", this.updateDimensions);
   },
 	componentWillReceiveProps (props) {
 		if (props.initialSelectedImage !== this.state.selectedImage) {
-			var firstItem = props.initialSelectedImage;
-			
-			if (props.initialSelectedImage >= this.lastPosition) {
-				firstItem =  this.lastPosition;
-			} 
-
-			if (!this.showArrows) {
-				firstItem = 0;
-			}
-
 			this.setState({
 				selectedImage: props.initialSelectedImage,
-				firstItem: firstItem,
 				animate: true
 			});
 		}
@@ -93,22 +73,17 @@ module.exports = React.createClass({
 
 	// Calculate positions for carousel
 	calculateSpace (total) {
-		this.wrapperSize = this.refs.itemsWrapper.getDOMNode().clientWidth;
-		this.itemSize = this._isSlider() ? this.wrapperSize : outerWidth(this.refs.item0.getDOMNode());
-		this.visibleItems = Math.floor(this.wrapperSize / this.itemSize);	
+		this.wrapperWidth = this.refs.itemsWrapper.getDOMNode().clientWidth;
+		this.imageWidth = this._isSlider() ? this.wrapperWidth : outerWidth(this.refs.item0.getDOMNode());
+		this.visibleItems = Math.floor(this.wrapperWidth / this.imageWidth);	
 		
-		this.lastElement = this.refs['item' + (total - 1)];
-		this.lastElementPosition = this.itemSize * total;
+		this.lastElementPosition = this.imageWidth * total;
 		
 		// exposing variables to other methods on this component
-		this.showArrows = this.visibleItems < total;
+		this.showArrows = (this.visibleItems / 2) < total;
 		
 		// Index of the last visible element that can be the first of the carousel
 		this.lastPosition = (total - this.visibleItems);
-
-		this.setState({
-			firstItem: (this._isSlider()) ? this.state.selectedImage : this.state.firstItem
-		});
 	}, 
 
 	triggerOnSelectImage (imageIndex) {
@@ -139,7 +114,7 @@ module.exports = React.createClass({
 		// getting the current delta
 		var delta = e.touches[0].pageX - this.state.touchStart;
     var leftBoundry = 0;
-    var lastLeftBoundry = - this.itemSize * (this.props.images.length - 1);
+    var lastLeftBoundry = - this.imageWidth * (this.props.images.length - 1);
 
     //if the first image meets the left boundry, prevent user from swiping left
     if (this.currentPosition === leftBoundry && delta > 0) {
@@ -200,19 +175,26 @@ module.exports = React.createClass({
 		);	
 	},
 
-	slideRight (){
-		this.moveTo(this.state.firstItem - 1)
+	slideRight () {
+		if (this._isSlider()) {
+			this.moveTo(this.state.selectedImage - 1);
+		} else {
+			this.moveTo(Math.max(this.state.selectedImage - Math.ceil(this.visibleItems / 2), 0));
+		}
 	},
 
 	slideLeft (){
-		this.moveTo(this.state.firstItem + 1)
+		if (this._isSlider()) {
+			this.moveTo(this.state.selectedImage + 1);
+		} else {
+			this.moveTo(Math.min(this.state.selectedImage + Math.ceil(this.visibleItems / 2), this.props.images.length - 1));
+		}
 	},
 
 	moveTo (position) {
 		position = (position + this.props.images.length) % this.props.images.length;
 		
 		this.setState({
-			firstItem: position,
 			// if it's not a slider, we don't need to set position here
 			selectedImage: this._isSlider() ? position : this.state.selectedImage
 		});
@@ -222,18 +204,13 @@ module.exports = React.createClass({
 
 
 	getTotalWidth () {
-		return this.itemSize * this.props.images.length || 'auto';
-	},
-
-	getNextPosition () {
-		return - this.itemSize * this.state.firstItem || 0;
+		return this.imageWidth * this.props.images.length || 'auto';
 	},
 
 	changeItem (e) {
 		var newIndex = e.target.value;
 		this.setState({
-			selectedImage: newIndex,
-			firstItem: newIndex
+			selectedImage: newIndex
 		})
 	},
 
@@ -243,7 +220,7 @@ module.exports = React.createClass({
 			
 			return (
 				<li key={index} ref={"item" + index} className={itemClass}
-					style={{width: this._isSlider() && this.itemSize}} 
+					style={{width: this._isSlider() && this.imageWidth}} 
 					onClick={this.triggerOnSelectImage.bind(this, index)}>
 					{item}
 				</li>
@@ -285,7 +262,7 @@ module.exports = React.createClass({
 		var itemListStyles = {};
 		
 		// hold the last position in the component context to calculate the delta on swiping
-		this.currentPosition = this.getNextPosition();
+		this.currentPosition = (this.wrapperWidth - this.imageWidth) / 2 - (this.imageWidth * this.state.selectedImage);
 
 		if (has3d) {
 			// if 3d is available, let's take advantage of the performance of transform
