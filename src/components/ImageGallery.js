@@ -26,7 +26,8 @@ module.exports = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			currentImage: this.props.initialSelectedImage
+			currentImage: this.props.initialSelectedImage,
+      thumbnailCarouselWidth: 0
 		}
 	},
   componentWillMount: function() {
@@ -57,6 +58,13 @@ module.exports = React.createClass({
 			}
 		}
 	},
+  changeWidth: function(width) {
+    if (width !== this.state.thumbnailCarouselWidth) {
+      this.setState({
+        thumbnailCarouselWidth: width
+      });
+    }
+  },
 	render: function() {
 		var { images, thumbnails } = this.props,
 			{ current } = this.state,
@@ -68,8 +76,8 @@ module.exports = React.createClass({
 
 		return (
 			<div className="image-gallery">
-				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showControls={this.props.showControls} showStatus={this.props.showStatus} onSelectImage={this.selectImage} />
-				<Carousel images={thumbnails} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
+				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showControls={this.props.showControls} showStatus={this.props.showStatus} onSelectImage={this.selectImage} onWidthChange={this.changeWidth} />
+        <Carousel images={thumbnails} carouselWidth={this.state.thumbnailCarouselWidth} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
 			</div>
 		);
 	}
