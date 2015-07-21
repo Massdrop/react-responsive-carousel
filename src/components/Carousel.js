@@ -73,8 +73,17 @@ module.exports = React.createClass({
 
 	// Calculate positions for carousel
 	calculateSpace (total) {
+		var numImages = this.props.images.length,
+			i;
+
 		this.wrapperWidth = this.refs.itemsWrapper.getDOMNode().clientWidth;
-		this.imageWidth = this._isSlider() ? this.wrapperWidth : outerWidth(this.refs.item0.getDOMNode());
+
+		// Get widest image and use that as the width of all image containers
+		this.imageWidth = 0;
+		for (i = 0; i < numImages; i += 1) {
+			this.imageWidth = Math.max(this.imageWidth, outerWidth(this.refs['item' + i].getDOMNode().children[0]));
+		}
+
 		this.visibleItems = Math.floor(this.wrapperWidth / this.imageWidth);	
 		
 		this.lastElementPosition = this.imageWidth * total;
@@ -219,8 +228,8 @@ module.exports = React.createClass({
 			var itemClass = klass.ITEM(this._isSlider(), index, this.state.selectedImage);
 			
 			return (
-				<li key={index} ref={"item" + index} className={itemClass}
-					style={{width: this._isSlider() && this.imageWidth}} 
+				<li key={index} ref={"item" + index} className={itemClass} 
+					style={{width: this._isSlider() && this.imageWidth}}
 					onClick={this.triggerOnSelectImage.bind(this, index)}>
 					{item}
 				</li>
