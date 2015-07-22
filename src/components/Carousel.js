@@ -70,7 +70,7 @@ module.exports = React.createClass({
 			});
 		}
 	},
-	componentDidMount: function(nextProps) {
+	componentDidMount: function() {
 		var index = this.props.images.length - 1,
 			maxImageWidth = this.state.maxImageWidth,
 			image;
@@ -325,7 +325,9 @@ module.exports = React.createClass({
 			showPrevArrow = showArrows && this.props.images.length > 1,
 			showNextArrow = showPrevArrow,
 			itemListStyles = {},
-			carouselWidth = this.state.maxImageWidth * this.props.images.length;
+			carouselWidth = this.state.maxImageWidth * this.props.images.length,
+			nextArrow = '',
+			prevArrow = '';
 
 		if (this.props.images.length === 0) {
 			return null;
@@ -354,9 +356,18 @@ module.exports = React.createClass({
 			}
 		}
 
+		if (showArrows) {
+			prevArrow = (
+				<button className={klass.ARROW_LEFT(false)} onClick={this.slideRight} />
+			);
+			nextArrow = (
+				<button className={klass.ARROW_RIGHT(false)} onClick={this.slideLeft} />
+			);
+		}
+
 		return (
 			<div className={klass.CAROUSEL(this._isSlider(), this.state.animate)}>
-				<button className={klass.ARROW_LEFT(!showPrevArrow)} onClick={this.slideRight} />
+				{prevArrow}
 				
 				<div className={klass.WRAPPER(this._isSlider())} ref="itemsWrapper" style={{ width: this.state.wrapperWidth }}>
 					<ul className={klass.SLIDER(this._isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList">
@@ -364,7 +375,7 @@ module.exports = React.createClass({
 					</ul>
 				</div>
 
-				<button className={klass.ARROW_RIGHT(!showNextArrow)} onClick={this.slideLeft} />
+				{nextArrow}
 				
 				{ this.renderDots() }
 				{ this.renderStatus() }

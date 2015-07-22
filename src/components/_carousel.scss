@@ -84,7 +84,6 @@
 	.control-arrow {
 		@extend %arrows;
 		top: 50%;
-		margin-top: -13px;
 		font-size: 18px;
 	}
 
@@ -126,8 +125,6 @@
 			color: #fff;
 			font-size: 26px;
 			bottom: 0;
-			margin-top: 0;
-			padding: 5px;
 		}
 	}
 
