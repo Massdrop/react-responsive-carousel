@@ -20,15 +20,21 @@
 
 	&.control-left {
 		left: 0;
-		&:before {
-			content: '\e803';
+		text-align: left;
+		width: 24.999%;
+
+		&:hover {
+			cursor: w-resize;
 		}
 	}
 
 	&.control-right {
 		right: 0;
-		&:before {
-			content: '\e802';
+		text-align: right;
+		width: 75%;
+
+		&:hover {
+			cursor: e-resize;
 		}
 	}
 }
@@ -84,7 +90,6 @@
 
 	.thumbs-wrapper {
 		position: relative;
-		margin: 0 20px;
 		overflow: hidden;
 	}
 
@@ -98,18 +103,9 @@
 
 	.thumb {
 		display: inline-block;
-		width: 80px;
-		margin-right: 6px;
 		white-space: nowrap;
 		overflow: hidden;
-		border: 1px solid #fff;
-		padding: 2px;
 		vertical-align: middle;
-
-		&.selected, &:hover {
-			border: 1px solid $color-primary;
-			padding: 2px;
-		}
 	}
 
 	&.carousel-slider {
@@ -132,11 +128,6 @@
 			bottom: 0;
 			margin-top: 0;
 			padding: 5px;
-
-			&:hover {
-				background: rgba(#000, .2);
-			}
-			
 		}
 	}
 

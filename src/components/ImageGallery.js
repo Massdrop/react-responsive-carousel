@@ -76,8 +76,8 @@ module.exports = React.createClass({
 
 		return (
 			<div className="image-gallery">
-				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showControls={this.props.showControls} showStatus={this.props.showStatus} onSelectImage={this.selectImage} onWidthChange={this.changeWidth} />
-        <Carousel images={thumbnails} carouselWidth={this.state.thumbnailCarouselWidth} initialSelectedImage={this.state.currentImage} onSelectImage={this.selectImage} />
+				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showDots={this.props.showDots} showStatus={this.props.showStatus} onSelectImage={this.selectImage} onChangeWidth={this.changeWidth} />
+        <Carousel images={thumbnails} carouselWidth={this.state.thumbnailCarouselWidth} initialSelectedImage={this.state.currentImage} showArrows={false} onSelectImage={this.selectImage} />
 			</div>
 		);
 	}

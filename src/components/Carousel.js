@@ -10,22 +10,24 @@ module.exports = React.createClass({
 	propsTypes: {
 		images: React.PropTypes.array.isRequired,
 		initialSelectedImage: React.PropTypes.number,
-		showControls: React.PropTypes.bool,
+		showArrows: React.PropTypes.bool,
+		showDots: React.PropTypes.bool,
 		showStatus: React.PropTypes.bool,
 		carouselWidth: React.PropTypes.number,
-		onWidthChange: React.PropTypes.func,
+		onChangeWidth: React.PropTypes.func,
 		onSelectImage: React.PropTypes.func
 	},
-	getDefaultProps () {
+	getDefaultProps: function() {
 		return {
 			initialSelectedImage: 0,
+			showArrows: true,
 			carouselWidth: 0,
 			// Carousel is the default type. It stands for a group of thumbs.
 			// It also accepts 'slider', which will show a full width item 
 			type: 'carousel'
 		}
 	},
-	getInitialState () {
+	getInitialState: function() {
 		return {
 			selectedImage: this.props.initialSelectedImage, // index of the image to be shown.
 			wrapperWidth: this.props.carouselWidth,
@@ -39,22 +41,22 @@ module.exports = React.createClass({
 		// touchPosition is a temporary var to decide what to do on touchEnd
 		touchPosition: null
 	},
-	componentWillMount() {
+	componentWillMount: function() {
 		if (typeof window !== 'undefined') {
 			// as the widths are calculated, we need to resize 
 			// the carousel when the window is resized
-			window.addEventListener("resize", this.updateDimensions);
+			window.addEventListener("resize", this.resizeWrapper);
 		}
   },
-	componentWillUnmount() {
+	componentWillUnmount: function() {
 		var index = this.props.images.length - 1;
 
-		window.removeEventListener("resize", this.updateDimensions);
+		window.removeEventListener("resize", this.resizeWrapper);
 		for (index; index >= 0; index -= 1) {
 			this.refs['item' + index].getDOMNode().children[0].onload = null;
 		}
   },
-	componentWillReceiveProps (props) {
+	componentWillReceiveProps: function(props) {
 		if (props.initialSelectedImage !== this.state.selectedImage) {
 			this.setState({
 				selectedImage: props.initialSelectedImage,
@@ -68,7 +70,7 @@ module.exports = React.createClass({
 			});
 		}
 	},
-	componentDidMount (nextProps) {
+	componentDidMount: function(nextProps) {
 		var index = this.props.images.length - 1,
 			maxImageWidth = this.state.maxImageWidth,
 			image;
@@ -84,15 +86,21 @@ module.exports = React.createClass({
 		}
 
 		if (maxImageWidth > this.state.maxImageWidth) {
-			this.setState({
-				maxImageWidth: maxImageWidth,
-				wrapperWidth: maxImageWidth
-			});
-		}
+			if (this._isSlider()) {
+				this.setState({
+					maxImageWidth: maxImageWidth,
+					wrapperWidth: maxImageWidth
+				});
 
-		// when the component is rendered we need to calculate 
-		// the container size to adjust the responsive behaviour
-		this.updateDimensions();
+				if (typeof this.props.onChangeWidth === 'function') {
+					this.props.onChangeWidth(maxImageWidth);
+				}
+			} else {
+				this.setState({
+					maxImageWidth: maxImageWidth
+				});
+			}
+		}
 
 		// adding swipe events
 		var el = this.refs.itemList.getDOMNode();
@@ -100,7 +108,7 @@ module.exports = React.createClass({
 		el.addEventListener('touchmove', this.onSwipeMove);
 		el.addEventListener('touchend', this.onSwipeEnd);
 	},
-	_isSlider() {
+	_isSlider: function() {
 		return this.props.type === "slider";
 	},
 	onImageLoad: function(e) {
@@ -111,7 +119,10 @@ module.exports = React.createClass({
 					maxImageWidth: width,
 					wrapperWidth: width
 				});
-				this.props.onWidthChange(width);
+
+				if (typeof this.props.onChangeWidth === 'function') {
+					this.props.onChangeWidth(width);
+				}
 			} else {
 				this.setState({
 					maxImageWidth: width
@@ -119,25 +130,36 @@ module.exports = React.createClass({
 			}
 		}
 	},
-	updateDimensions () {
-		var wrapperWidth = this.refs.itemsWrapper.getDOMNode().clientWidth;
+	resizeWrapper: function() {
+		var index = this.props.images.length - 1,
+			maxImageWidth = 0,
+			image;
 
-		if (wrapperWidth !== this.state.wrapperWidth) {
+		for (index; index >= 0; index -= 1) {
+			image = this.refs['item' + index].getDOMNode().children[0];
+
+			if (image.complete) { // image is loaded
+				maxImageWidth = Math.max(outerWidth(image), maxImageWidth);
+			}
+		}
+
+		if (this._isSlider()) {
 			this.setState({
-				wrapperWidth: wrapperWidth,
+				maxImageWidth: maxImageWidth,
+				wrapperWidth: maxImageWidth
 			});
 
-			this.props.onWidthChange(wrapperWidth);
+			if (typeof this.props.onChangeWidth === 'function') {
+				this.props.onChangeWidth(maxImageWidth);
+			}
 		}
 	},
 	numVisibleItems: function() {
 		return Math.floor(this.state.wrapperWidth / this.state.maxImageWidth);
 	},
 	triggerOnSelectImage (imageIndex) {
-		var handler = this.props.onSelectImage;
-
-		if (typeof handler === 'function') {
-			handler(imageIndex);
+		if (typeof this.props.onSelectImage === 'function') {
+			this.props.onSelectImage(imageIndex);
 		}
 
 		if (imageIndex !== this.state.selectedImage) {
@@ -148,7 +170,7 @@ module.exports = React.createClass({
 	},
 
 	// touch start
-	onSwipeStart (e) {
+	onSwipeStart: function (e) {
 		this.setState({
 			// saving the initial touch 
 			touchStart: e.touches[0].pageX,
@@ -157,7 +179,7 @@ module.exports = React.createClass({
 		})
 	},
 
-	onSwipeMove (e) {
+	onSwipeMove: function (e) {
 		// getting the current delta
 		var delta = e.touches[0].pageX - this.state.touchStart;
     var leftBoundry = 0;
@@ -193,7 +215,7 @@ module.exports = React.createClass({
 		}
 	},
 
-	onSwipeEnd (e) {
+	onSwipeEnd: function (e) {
 		this.setState({
 			// reset touchStart position
 			touchStart: null,
@@ -222,7 +244,7 @@ module.exports = React.createClass({
 		);	
 	},
 
-	slideRight () {
+	slideRight: function() {
 		if (this._isSlider()) {
 			this.moveTo(this.state.selectedImage - 1);
 		} else {
@@ -230,7 +252,7 @@ module.exports = React.createClass({
 		}
 	},
 
-	slideLeft (){
+	slideLeft: function() {
 		if (this._isSlider()) {
 			this.moveTo(this.state.selectedImage + 1);
 		} else {
@@ -238,7 +260,7 @@ module.exports = React.createClass({
 		}
 	},
 
-	moveTo (position) {
+	moveTo: function(position) {
 		position = (position + this.props.images.length) % this.props.images.length;
 		
 		this.setState({
@@ -250,24 +272,25 @@ module.exports = React.createClass({
 	},
 
 
-	getTotalWidth () {
+	getTotalWidth: function() {
 		return this.state.maxImageWidth * this.props.images.length || 'auto';
 	},
 
-	changeItem (e) {
+	changeItem: function(e) {
 		var newIndex = e.target.value;
 		this.setState({
 			selectedImage: newIndex
 		})
 	},
 
-	renderImages () {
+	renderImages: function() {
 		return this.props.images.map((item, index) => {
-			var itemClass = klass.ITEM(this._isSlider(), index, this.state.selectedImage);
+			var itemClass = klass.ITEM(this._isSlider(), index, this.state.selectedImage),
+				styles = this._isSlider() ? { width: this.state.maxImageWidth } : {};
 			
 			return (
 				<li key={index} ref={"item" + index} className={itemClass} 
-					style={{width: this._isSlider() && this.state.maxImageWidth}}
+					style={styles}
 					onClick={this.triggerOnSelectImage.bind(this, index)}>
 					{item}
 				</li>
@@ -276,8 +299,8 @@ module.exports = React.createClass({
 					
 	},
 
-	renderControls () {
-		if (!this.props.showControls) {
+	renderDots: function() {
+		if (!this.props.showDots) {
 			return null
 		}
 		
@@ -290,15 +313,15 @@ module.exports = React.createClass({
 		);
 	},
 
-	renderStatus () {
+	renderStatus: function() {
 		if (!this.props.showStatus) {
 			return null
 		}
 		return <p className="carousel-status">{this.state.selectedImage + 1} of {this.props.images.length}</p>;
 	}, 
 
-	render () {
-		var showArrows = (this.numVisibleItems() / 2) < this.props.images.length,
+	render: function() {
+		var showArrows = this.props.showArrows && (this.numVisibleItems() / 2) < this.props.images.length,
 			showPrevArrow = showArrows && this.props.images.length > 1,
 			showNextArrow = showPrevArrow,
 			itemListStyles = {},
@@ -335,7 +358,7 @@ module.exports = React.createClass({
 			<div className={klass.CAROUSEL(this._isSlider(), this.state.animate)}>
 				<button className={klass.ARROW_LEFT(!showPrevArrow)} onClick={this.slideRight} />
 				
-				<div className={klass.WRAPPER(this._isSlider())} ref="itemsWrapper">
+				<div className={klass.WRAPPER(this._isSlider())} ref="itemsWrapper" style={{ width: this.state.wrapperWidth }}>
 					<ul className={klass.SLIDER(this._isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList">
 						{ this.renderImages() }
 					</ul>
@@ -343,7 +366,7 @@ module.exports = React.createClass({
 
 				<button className={klass.ARROW_RIGHT(!showNextArrow)} onClick={this.slideLeft} />
 				
-				{ this.renderControls() }
+				{ this.renderDots() }
 				{ this.renderStatus() }
 			</div>
 		);

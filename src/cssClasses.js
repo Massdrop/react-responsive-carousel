@@ -36,14 +36,14 @@ module.exports = {
 
 	ARROW_LEFT (disabled) {
 		return classNames({
-			"control-arrow control-left": true,
+			"control-arrow control-left icon-angle-left": true,
 			"control-disabled": disabled
 		});
 	},
 
 	ARROW_RIGHT (disabled) {
 		return classNames({
-			"control-arrow control-right": true,
+			"control-arrow control-right icon-angle-right": true,
 			"control-disabled": disabled
 		})
 	},
