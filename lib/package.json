@@ -29,9 +29,10 @@
   },
   "homepage": "http://leandrowd.github.io/react-responsive-carousel/",
   "dependencies": {
-  "classnames": "^2.1.1"
+    "classnames": "^2.1.1",
+    "lodash": "~3.8.0"
   },
   "devDependencies": {
-  "react": "^0.13.1"
+    "react": "^0.13.1"
   }
 }
