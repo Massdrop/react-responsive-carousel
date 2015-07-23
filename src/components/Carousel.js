@@ -92,20 +92,7 @@ module.exports = React.createClass({
 		}
 
 		if (maxImageWidth > this.state.maxImageWidth) {
-			if (this.isSlider()) {
-				this.setState({
-					maxImageWidth: maxImageWidth,
-					wrapperWidth: maxImageWidth
-				});
-
-				if (typeof this.props.onChangeWidth === 'function') {
-					this.props.onChangeWidth(maxImageWidth);
-				}
-			} else {
-				this.setState({
-					maxImageWidth: maxImageWidth
-				});
-			}
+			this.setMaxImageWidth(maxImageWidth);
 		}
 
 		// adding swipe events
