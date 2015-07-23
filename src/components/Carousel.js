@@ -3,6 +3,7 @@
 /** @jsx React.DOM */
 var React = require('react/addons'),
 	klass = require('../cssClasses'),
+	_ = require('lodash'),
 	outerWidth = require('../dimensions').outerWidth,
 	has3d = require('../has3d')();
 
@@ -32,6 +33,7 @@ module.exports = React.createClass({
 			selectedImage: this.props.initialSelectedImage, // index of the image to be shown.
 			wrapperWidth: this.props.carouselWidth,
 			maxImageWidth: 0,
+			loadedImages: new Array(this.props.images.length),
 			animate: false // we don't want the first image loaded to slide in
 		}
 	},
@@ -53,7 +55,7 @@ module.exports = React.createClass({
 
 		window.removeEventListener("resize", this.resizeWrapper);
 		for (index; index >= 0; index -= 1) {
-			this.refs['item' + index].getDOMNode().children[0].onload = null;
+			this.refs['item' + index].getDOMNode().onload = null;
 		}
   },
 	componentWillReceiveProps: function(props) {
@@ -76,17 +78,21 @@ module.exports = React.createClass({
 			image;
 
 		for (index; index >= 0; index -= 1) {
-			image = this.refs['item' + index].getDOMNode().children[0];
+			image = this.refs['item' + index].getDOMNode();
 
-			if (image.complete) { // image is loaded
+			if (!!image.src && image.complete) { // image is loaded
 				maxImageWidth = Math.max(outerWidth(image), maxImageWidth);
 			} else {
 				image.onload = this.onImageLoad;
+
+				if (!image.src && index === this.state.selectedImage) {
+					this.loadImage(index);
+				}
 			}
 		}
 
 		if (maxImageWidth > this.state.maxImageWidth) {
-			if (this._isSlider()) {
+			if (this.isSlider()) {
 				this.setState({
 					maxImageWidth: maxImageWidth,
 					wrapperWidth: maxImageWidth
@@ -108,13 +114,38 @@ module.exports = React.createClass({
 		el.addEventListener('touchmove', this.onSwipeMove);
 		el.addEventListener('touchend', this.onSwipeEnd);
 	},
-	_isSlider: function() {
+	isSlider: function() {
 		return this.props.type === "slider";
+	},
+	isImageLoaded: function(index) {
+		return this.state.loadedImages[index];
+	},
+	loadImage: function(index) {
+		var imageReactElement = _.get(this, 'refs[item' + index + ']'),
+			loadedImages,
+			image;
+
+		if (imageReactElement) {
+			image = imageReactElement.getDOMNode();
+
+			if (!image.src) {
+				image.src = this.props.images[index].src;
+
+				loadedImages = this.state.loadedImages.slice();
+				loadedImages[index] = true;
+				this.setState({
+					loadedImages: loadedImages
+				});
+
+				_.defer(this.loadImage, index + 1);
+				_.defer(this.loadImage, index - 1);
+			}
+		}
 	},
 	onImageLoad: function(e) {
 		var width = outerWidth(e.target);
 		if (width > this.state.maxImageWidth) {
-			if (this._isSlider()) {
+			if (this.isSlider()) {
 				this.setState({
 					maxImageWidth: width,
 					wrapperWidth: width
@@ -136,14 +167,14 @@ module.exports = React.createClass({
 			image;
 
 		for (index; index >= 0; index -= 1) {
-			image = this.refs['item' + index].getDOMNode().children[0];
+			image = this.refs['item' + index].getDOMNode();
 
 			if (image.complete) { // image is loaded
 				maxImageWidth = Math.max(outerWidth(image), maxImageWidth);
 			}
 		}
 
-		if (this._isSlider()) {
+		if (this.isSlider()) {
 			this.setState({
 				maxImageWidth: maxImageWidth,
 				wrapperWidth: maxImageWidth
@@ -245,7 +276,7 @@ module.exports = React.createClass({
 	},
 
 	slideRight: function() {
-		if (this._isSlider()) {
+		if (this.isSlider()) {
 			this.moveTo(this.state.selectedImage - 1);
 		} else {
 			this.moveTo(Math.max(this.state.selectedImage - Math.ceil(this.numVisibleItems() / 2), 0));
@@ -253,7 +284,7 @@ module.exports = React.createClass({
 	},
 
 	slideLeft: function() {
-		if (this._isSlider()) {
+		if (this.isSlider()) {
 			this.moveTo(this.state.selectedImage + 1);
 		} else {
 			this.moveTo(Math.min(this.state.selectedImage + Math.ceil(this.numVisibleItems() / 2), this.props.images.length - 1));
@@ -265,7 +296,7 @@ module.exports = React.createClass({
 		
 		this.setState({
 			// if it's not a slider, we don't need to set position here
-			selectedImage: this._isSlider() ? position : this.state.selectedImage
+			selectedImage: this.isSlider() ? position : this.state.selectedImage
 		});
 		
 		this.triggerOnSelectImage(position);
@@ -285,14 +316,25 @@ module.exports = React.createClass({
 
 	renderImages: function() {
 		return this.props.images.map((item, index) => {
-			var itemClass = klass.ITEM(this._isSlider(), index, this.state.selectedImage),
-				styles = this._isSlider() ? { width: this.state.maxImageWidth } : {};
+			var itemClass = klass.ITEM(this.isSlider(), index, this.state.selectedImage),
+				styles = this.isSlider() ? { width: this.state.maxImageWidth } : {},
+				imageTag;
 			
+			if (this.isImageLoaded(index)) {
+				imageTag = (
+					<img key={index} ref={"item" + index} {...item} />
+				);
+			} else {
+				imageTag = (
+					<img key={index} ref={"item" + index} {..._.omit(item, 'src')} />
+				);
+			}
+
 			return (
-				<li key={index} ref={"item" + index} className={itemClass} 
+				<li key={index} className={itemClass} 
 					style={styles}
 					onClick={this.triggerOnSelectImage.bind(this, index)}>
-					{item}
+					{imageTag}
 				</li>
 			);
 		});
@@ -366,11 +408,11 @@ module.exports = React.createClass({
 		}
 
 		return (
-			<div className={klass.CAROUSEL(this._isSlider(), this.state.animate)}>
+			<div className={klass.CAROUSEL(this.isSlider(), this.state.animate)}>
 				{prevArrow}
 				
-				<div className={klass.WRAPPER(this._isSlider())} ref="itemsWrapper" style={{ width: this.state.wrapperWidth }}>
-					<ul className={klass.SLIDER(this._isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList">
+				<div className={klass.WRAPPER(this.isSlider())} ref="itemsWrapper" style={{ width: this.state.wrapperWidth }}>
+					<ul className={klass.SLIDER(this.isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList">
 						{ this.renderImages() }
 					</ul>
 				</div>
