@@ -70,6 +70,9 @@ module.exports = React.createClass({
       }
     }
   },
+  onTouchMove: function(e) {
+    e.preventDefault(); // Prevent page from scrolling while swiping gallery.
+  },
 	render: function() {
 		var { images, thumbnails } = this.props,
 			{ current } = this.state,
@@ -80,7 +83,7 @@ module.exports = React.createClass({
 		}
 
 		return (
-			<div className="image-gallery">
+			<div className="image-gallery" onTouchMove={this.onTouchMove}>
 				<Carousel type="slider" images={images} initialSelectedImage={this.state.currentImage} showDots={this.props.showDots} showStatus={this.props.showStatus} onSelectImage={this.selectImage} onChangeWidth={this.changeWidth} />
         <Carousel images={thumbnails} carouselWidth={this.state.thumbnailCarouselWidth} initialSelectedImage={this.state.currentImage} showArrows={false} onSelectImage={this.selectImage} />
 			</div>

@@ -94,12 +94,6 @@ module.exports = React.createClass({
 		if (maxImageWidth > this.state.maxImageWidth) {
 			this.setMaxImageWidth(maxImageWidth);
 		}
-
-		// adding swipe events
-		var el = this.refs.itemList.getDOMNode();
-		el.addEventListener('touchstart', this.onSwipeStart);
-		el.addEventListener('touchmove', this.onSwipeMove);
-		el.addEventListener('touchend', this.onSwipeEnd);
 	},
 	isSlider: function() {
 		return this.props.type === "slider";
@@ -427,7 +421,7 @@ module.exports = React.createClass({
 				{prevArrow}
 				
 				<div className={klass.WRAPPER(this.isSlider())} ref="itemsWrapper" style={{ width: this.state.wrapperWidth }}>
-					<ul className={klass.SLIDER(this.isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList">
+					<ul className={klass.SLIDER(this.isSlider(), this.state.swiping)} style={itemListStyles} ref="itemList" onTouchStart={this.onSwipeStart} onTouchMove={this.onSwipeMove} onTouchEnd={this.onSwipeEnd}>
 						{ this.renderImages() }
 					</ul>
 				</div>
