@@ -257,6 +257,8 @@ module.exports = React.createClass({
 		} else {
 			elementStyle.left = position + 'px';
 		}
+
+		e.preventDefault(); // Prevent page from scrolling while swiping carousel.
 	},
 
 	onSwipeEnd: function (e) {
@@ -285,7 +287,7 @@ module.exports = React.createClass({
 				// discard the position
 				this.touchPosition = null;	
 			}.bind(this)
-		);	
+		);
 	},
 
 	slideRight: function() {
